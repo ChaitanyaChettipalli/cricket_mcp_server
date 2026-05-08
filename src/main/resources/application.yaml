@@ -1,0 +1,14 @@
+server:
+  port: 8082
+spring:
+  data:
+    mongodb:
+      uri: ${MONGO_URL}
+
+  application:
+    name: mcp-server
+  ai:
+    mcp:
+      server:
+        protocol: STREAMABLE
+
