@@ -13,10 +13,14 @@ import org.springaicommunity.mcp.annotation.McpProgressToken;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpToolParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CricketService {
@@ -53,11 +57,21 @@ public class CricketService {
                                   @McpToolParam(description = "Player First & Last Name") String playerName,
                                   @McpToolParam(description = "Date in MM/DD/YYYY format") String date ) {
 
-        var id = waterTaskRepo.save(new WaterTaskDtls(playerName, date));
+        try {
+            if (exchange.getClientCapabilities().elicitation() != null) {
+                logger.info("MCP Client Supports Elicitation");
+            }
 
-        logger.info("Water Task Recorded Player with Id {}", id);
+            logger.info("Creating Water Task for {} on Date {}", playerName, date);
+            var dbDate = LocalDate.parse(date, DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+            var id = waterTaskRepo.save(new WaterTaskDtls(playerName, dbDate));
+            logger.info("Water Task Recorded Player with Id {}", id);
 
-        return "Water task recorded for "+playerName+" on "+date;
+            return "Water task recorded for " + playerName + " on " + date;
+        } catch (Exception exp) {
+            logger.error("Error while Creating Water Task {}", exp.fillInStackTrace());
+            return "Error while creating Water Task";
+        }
     }
 
     @McpTool(description = "Water Task Details Performed by PCC Players so far")

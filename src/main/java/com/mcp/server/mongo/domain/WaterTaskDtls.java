@@ -2,13 +2,15 @@ package com.mcp.server.mongo.domain;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDate;
+
 @Document(collection = "waterTaskDtls")
 public class WaterTaskDtls {
 
     private String playerName;
-    private String date;
+    private LocalDate date;
 
-    public WaterTaskDtls(String playerName, String date) {
+    public WaterTaskDtls(String playerName, LocalDate date) {
         this.playerName = playerName;
         this.date = date;
     }

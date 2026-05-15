@@ -14,8 +14,5 @@ ARG JAR_FILE=build/libs/spring_mcp_server-0.0.1-SNAPSHOT.jar
 # Copy the JAR file from your host machine into the container's filesystem
 COPY ${JAR_FILE} /app.jar
 
-# Copy secrets file into container
-COPY secrets.env /secrets.env
-
 # Load secrets as environment variables, then start the app
-ENTRYPOINT ["sh","-c","set -a; [ -f /secrets.env ] && . /secrets.env; exec java -jar /app.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]
